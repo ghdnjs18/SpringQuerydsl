@@ -126,4 +126,6 @@ class MemberRepositoryTest {
             System.out.println("findMember = " + findMember);
         }
     }
+
+
 }
