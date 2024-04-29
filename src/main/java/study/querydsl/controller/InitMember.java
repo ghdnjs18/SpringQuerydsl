@@ -49,6 +49,12 @@ public class InitMember {
             em.persist(user2);
             em.persist(user3);
 
+            // 카테고리
+            Category categoryA = new Category("AAA");
+            Category categoryB = new Category("BBB");
+            em.persist(categoryA);
+            em.persist(categoryB);
+
             // 게시글
             for (int i = 0; i < 15; i++) {
                 User selectUser;
@@ -59,7 +65,9 @@ public class InitMember {
                 } else {
                     selectUser = user3;
                 }
-                Post selectPost = new Post("tile" + i, "content : " + String.valueOf(i).repeat(5), selectUser);
+                Category selectedcate = i % 2 == 0 ? categoryA : categoryB;
+
+                Post selectPost = new Post("tile" + i, "content : " + String.valueOf(i).repeat(5), selectUser, selectedcate);
                 for (int j = 0; j < 9; j++) {
                     User selectUser2;
                     if (j % 3 == 0) {
@@ -69,7 +77,9 @@ public class InitMember {
                     } else {
                         selectUser2 = user3;
                     }
-                    selectPost.addCommentList(new Comment(String.valueOf(i).repeat(10), selectUser2));
+                    Comment comment = new Comment(String.valueOf(i*j).repeat(10), selectUser2);
+                    selectPost.addCommentList(comment);
+                    em.persist(comment);
                 }
                 em.persist(selectPost);
             }
