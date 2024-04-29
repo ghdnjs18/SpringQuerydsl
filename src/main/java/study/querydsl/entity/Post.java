@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post extends Timestamped{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @Column(name = "title", nullable = false)
@@ -27,7 +27,7 @@ public class Post extends Timestamped{
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "account_id")
     private User user;
 
     @Column(name = "postlike", nullable = false)
@@ -47,10 +47,11 @@ public class Post extends Timestamped{
     @OrderBy("createdTime desc")
     private List<Comment> commentList = new ArrayList<>();
 
-    public Post(String title, String contents, User user) {
+    public Post(String title, String contents, User user, Category category) {
         this.title = title;
         this.contents = contents;
         this.user = user;
+        this.category = category;
     }
 
     public Post(PostRequestDto requestDto) {

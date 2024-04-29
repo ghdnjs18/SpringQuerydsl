@@ -13,14 +13,14 @@ import lombok.Setter;
 @Table(name = "post_like")
 public class PostLike {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @Column(name = "checklike", nullable = false)
     private boolean check = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "account_id", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)

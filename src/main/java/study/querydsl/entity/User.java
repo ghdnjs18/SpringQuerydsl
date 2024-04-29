@@ -14,9 +14,10 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "account")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @Column(name = "userid", nullable = false, unique = true)
@@ -34,7 +35,7 @@ public class User {
     @Column(name = "account_use")
     private boolean accountUse = true;
 
-    @Column(name = "admin", nullable = false)
+    @Column(name = "admin")
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 

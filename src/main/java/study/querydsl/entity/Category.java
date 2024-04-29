@@ -14,13 +14,12 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "category")
     private List<Post> postList = new ArrayList<>();
 
