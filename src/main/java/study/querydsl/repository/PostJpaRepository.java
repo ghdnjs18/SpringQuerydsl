@@ -3,6 +3,7 @@ package study.querydsl.repository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import study.querydsl.dto.CommentResponseDto;
 import study.querydsl.dto.PostDetailResponseDto;
 import study.querydsl.dto.PostResponseDto;
 
@@ -59,4 +60,93 @@ public class PostJpaRepository {
                 .getResultList();
     }
 
+    /**
+     * 게시글 상세 조회
+     * 1. 게시글을 조회하고 게시글에 있는 댓글들을 조회해서 dto에 넣어준다.
+     *    -
+     */
+
+
+
+    public List<PostDetailResponseDto> findPostComment(Long postId) {
+        List<PostDetailResponseDto> result = findPost(postId);
+
+        result.forEach(o -> {
+            List<CommentResponseDto> comments = findComment(postId);
+            o.setCommentList(comments);
+        });
+
+        return result;
+    }
+
+    public List<PostDetailResponseDto> findPost(Long postId) {
+        return em.createQuery("select new study.querydsl.dto.PostDetailResponseDto(" +
+                        "p.id," +
+                        "p.title," +
+                        "u.userId," +
+                        "p.contents," +
+                        "p.postLike," +
+                        "p.createdTime," +
+                        "p.modifiedTime," +
+                        "c.name) " +
+                        "from Post p " +
+                        "left join p.user u " +
+                        "left join p.category c " +
+                        "where p.id = :postId", PostDetailResponseDto.class)
+                .setParameter("postId", postId)
+                .getResultList();
+    }
+
+    public List<CommentResponseDto> findComment(Long postId) {
+        return em.createQuery("select new study.querydsl.dto.CommentResponseDto(" +
+                        "c.id," +
+                        "c.comment," +
+                        "u.userId," +
+                        "c.commentLike," +
+                        "c.createdTime," +
+                        "c.modifiedTime) " +
+                        "from Post p " +
+                        "join p.commentList c " +
+                        "left join c.user u " +
+                        "where p.id = :postId", CommentResponseDto.class)
+                .setParameter("postId", postId)
+                .getResultList();
+    }
+
+    public List<PostDetailResponseDto> findPost2(Long postId) {
+        return em.createQuery("select new study.querydsl.dto.PostDetailResponseDto(p) " +
+                        "from Post p " +
+                        "join fetch p.user u " +
+                        "join fetch p.category c " +
+                        "where p.id = :postId", PostDetailResponseDto.class)
+                .setParameter("postId", postId)
+                .getResultList();
+    }
+
+    public List<CommentResponseDto> findComment2(Long postId) {
+        return em.createQuery("select new study.querydsl.dto.CommentResponseDto(c) " +
+                        "from Post p " +
+                        "join p.commentList c " +
+                        "join fetch c.user u " +
+                        "where p.id = :postId", CommentResponseDto.class)
+                .setParameter("postId", postId)
+                .getResultList();
+    }
+
+    public List<PostDetailResponseDto> findPost3(Long postId) {
+        return em.createQuery("select new study.querydsl.dto.PostDetailResponseDto(p) " +
+                        "from Post p " +
+                        "where p.id = :postId", PostDetailResponseDto.class)
+                .setParameter("postId", postId)
+                .getResultList();
+    }
+
+    public List<CommentResponseDto> findComment3(Long postId) {
+        return em.createQuery("select new study.querydsl.dto.CommentResponseDto(c) " +
+                        "from Post p " +
+                        "join p.commentList c " +
+                        "where p.id = :postId", CommentResponseDto.class)
+                .setParameter("postId", postId)
+                .getResultList();
+    }
 }

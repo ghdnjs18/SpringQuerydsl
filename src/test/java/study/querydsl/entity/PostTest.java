@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import study.querydsl.dto.CommentResponseDto;
+import study.querydsl.dto.PostDetailResponseDto;
 import study.querydsl.dto.PostResponseDto;
 import study.querydsl.repository.PostJpaRepository;
 import study.querydsl.repository.PostQueryRepository;
@@ -80,7 +82,7 @@ class PostTest {
 
     @Test
     void findUserPost_jpa() {
-        List<PostResponseDto> userPost = postJpaRepository.findUserPost2("user1");
+        List<PostResponseDto> userPost = postJpaRepository.findUserPost("user1");
 
         for (PostResponseDto postResponseDto : userPost) {
             System.out.println("postResponseDto = " + postResponseDto);
@@ -89,7 +91,7 @@ class PostTest {
 
     @Test
     void findUserPost_datajpa() {
-        List<PostResponseDto> userPost = postRepository.findUserPost2("user1");
+        List<PostResponseDto> userPost = postRepository.findUserPost("user1");
 
         for (PostResponseDto postResponseDto : userPost) {
             System.out.println("postResponseDto = " + postResponseDto);
@@ -98,10 +100,52 @@ class PostTest {
 
     @Test
     void findUserPost_querydsl() {
-        List<PostResponseDto> userPost = postQueryRepository.findUserPost2("user1");
+        List<PostResponseDto> userPost = postQueryRepository.findUserPost("user1");
 
         for (PostResponseDto postResponseDto : userPost) {
             System.out.println("postResponseDto = " + postResponseDto);
+        }
+    }
+
+    @Test
+    void findPostComment_jpa() {
+        List<PostDetailResponseDto> postComment = postJpaRepository.findPostComment(1L);
+
+        for (PostDetailResponseDto postResponseDto : postComment) {
+            System.out.println("postResponseDto = " + postResponseDto);
+            for (CommentResponseDto commentResponseDto : postResponseDto.getCommentList()) {
+                System.out.println("commentResponseDto = " + commentResponseDto);
+            }
+        }
+    }
+
+    @Test
+    void findPostComment_datajpa() {
+        List<PostDetailResponseDto> postComment = postRepository.findPost(1L);
+
+        postComment.forEach(o -> {
+            List<CommentResponseDto> comments = postRepository.findComment(1L);
+            o.setCommentList(comments);
+        });
+
+
+        for (PostDetailResponseDto postResponseDto : postComment) {
+            System.out.println("postResponseDto = " + postResponseDto);
+            for (CommentResponseDto commentResponseDto : postResponseDto.getCommentList()) {
+                System.out.println("commentResponseDto = " + commentResponseDto);
+            }
+        }
+    }
+
+    @Test
+    void findPostComment_querydsl() {
+        List<PostDetailResponseDto> postComment = postQueryRepository.findPostComment(1L);
+
+        for (PostDetailResponseDto postResponseDto : postComment) {
+            System.out.println("postResponseDto = " + postResponseDto);
+            for (CommentResponseDto commentResponseDto : postResponseDto.getCommentList()) {
+                System.out.println("commentResponseDto = " + commentResponseDto);
+            }
         }
     }
 }
